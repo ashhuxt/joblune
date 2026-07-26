@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-hairline;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased bg-canvas text-ink;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight;
+    font-weight: 400;
+  }
+
+  a, button {
+    @apply outline-none;
+  }
+
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+    @apply ring-2 ring-coral/40 ring-offset-2 ring-offset-canvas;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-coral text-onPrimary font-body font-medium text-sm px-5 h-10 inline-flex items-center justify-center rounded-md
+           hover:bg-coralActive active:bg-coralActive transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-canvas text-ink font-body font-medium text-sm px-5 h-10 inline-flex items-center justify-center rounded-md
+           border border-hairline hover:border-ink/30 transition-colors;
+  }
+
+  .btn-secondary-on-dark {
+    @apply bg-surfaceDarkElevated text-onDark font-body font-medium text-sm px-5 h-10 inline-flex items-center justify-center rounded-md
+           hover:brightness-110 transition;
+  }
+
+  .input-field {
+    @apply bg-canvas border border-hairline rounded-md px-3.5 h-10 text-ink text-sm
+           placeholder:text-mutedSoft focus:border-coral transition-colors;
+  }
+
+  .card {
+    @apply bg-surfaceCard rounded-card p-6;
+  }
+
+  .card-outline {
+    @apply bg-canvas border border-hairline rounded-card p-6;
+  }
+
+  .card-dark {
+    @apply bg-surfaceDark text-onDark rounded-card p-8;
+  }
+
+  .badge-pill {
+    @apply bg-surfaceCard text-ink text-xs font-medium rounded-full px-3 py-1;
+  }
+
+  .badge-coral {
+    @apply bg-coral text-onPrimary text-xs font-medium uppercase tracking-wider rounded-full px-3 py-1;
+  }
+
+  .text-link {
+    @apply text-coral hover:underline;
+  }
+}

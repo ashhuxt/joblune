@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: joblune-backend
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/joblune_db}
+    username: ${DB_USERNAME:joblune}
+    password: ${DB_PASSWORD:Divya@2019}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: ${DDL_AUTO:update}
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+    include-stacktrace: always
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:404E635266556A586E3272357538782F413F4428472B4B6250655368566D5971}
+    access-token-expiration-ms: ${JWT_ACCESS_EXP:900000}      # 15 minutes
+    refresh-token-expiration-ms: ${JWT_REFRESH_EXP:604800000} # 7 days
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME:siwbw4e1}
+  api-key: ${CLOUDINARY_API_KEY:315886583921717}
+  api-secret: ${CLOUDINARY_API_SECRET:JSIT9N-MdpHR6Cv0xhpkT6vaOzE}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    com.joblune.backend: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
