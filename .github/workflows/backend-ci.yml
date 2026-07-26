@@ -67,8 +67,4 @@ jobs:
 
       - name: Trigger Render deploy
         run: |
-          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" ]; then
-            curl -f -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
-          else
-            echo "Render deploy hook URL is not configured yet. Skipping deployment."
-          fi
+          echo "Render deployment will be configured later."
