@@ -17,7 +17,7 @@
 ![Java](https://img.shields.io/badge/Java-21-orange?style=for-the-badge&logo=openjdk)
 ![Spring Boot](https://img.shields.io/badge/SpringBoot-3.3-brightgreen?style=for-the-badge&logo=springboot)
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-336791?style=for-the-badge&logo=postgresql)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=for-the-badge&logo=postgresql)
 ![JWT](https://img.shields.io/badge/Auth-JWT-success?style=for-the-badge)
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-Resume%20Storage-3448C5?style=for-the-badge&logo=cloudinary)
 ![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=for-the-badge&logo=docker)
