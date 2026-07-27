@@ -37,6 +37,8 @@ public class SecurityConfig {
     private String allowedOrigins;
 
     private static final String[] PUBLIC_ENDPOINTS = {
+            "/",
+            "/health",
             "/api/auth/**",
             "/api/jobs",
             "/api/jobs/**",
@@ -54,6 +56,7 @@ public class SecurityConfig {
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.GET, "/api/jobs", "/api/jobs/**").permitAll()
+                    .requestMatchers("/", "/health").permitAll()
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                     .requestMatchers("/actuator/health").permitAll()
