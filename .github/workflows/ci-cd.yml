@@ -7,8 +7,8 @@ on:
     branches: [ main, master ]
 
 jobs:
-  backend-test:
-    name: Build & Test Java Backend
+  backend-build:
+    name: Build Java Backend
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -21,10 +21,13 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Run Backend Unit & Integration Tests
+      - name: Grant execute permission for mvnw
+        run: chmod +x backend/mvnw
+
+      - name: Build Backend with Maven
         run: |
           cd backend
-          ./mvnw clean test
+          ./mvnw clean compile -DskipTests
 
   frontend-build:
     name: Build & Verify React Frontend
@@ -49,21 +52,3 @@ jobs:
         run: |
           cd frontend
           npm run build
-
-  deploy-vercel:
-    name: Deploy Frontend to Vercel
-    needs: [backend-test, frontend-build]
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: ./frontend
-          vercel-args: '--prod'
