@@ -4,7 +4,8 @@ import { useAuth } from '../context/AuthContext'
 import MoonMark from '../components/MoonMark'
 
 export default function RegisterPage() {
-  const { register } = useAuth()
+  // 1. Destructure `signup` (matches AuthContext.jsx)
+  const { signup } = useAuth()
   const navigate = useNavigate()
 
   const [form, setForm] = useState({
@@ -25,8 +26,22 @@ export default function RegisterPage() {
     e.preventDefault()
     setLoading(true)
     setError(null)
+
+    // 2. Derive username automatically from email (e.g. dev@example.com -> dev)
+    const generatedUsername = form.email.split('@')[0] || form.fullName.replace(/\s+/g, '').toLowerCase()
+
+    const payload = {
+      username: generatedUsername,
+      email: form.email.trim().toLowerCase(),
+      password: form.password,
+      fullName: form.fullName,
+      role: form.role,
+      ...(form.companyName ? { companyName: form.companyName } : {})
+    }
+
     try {
-      await register(form)
+      // 3. Call signup function with complete payload
+      await signup(payload)
       navigate('/')
     } catch (err) {
       setError(err.response?.data?.message || 'Could not create your account.')

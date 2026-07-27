@@ -1,102 +1,218 @@
-import { createContext, useContext, useEffect, useState, useCallback } from 'react'
-import { authApi, usersApi } from '../api/services'
-import { AUTH_SESSION_CLEARED_EVENT, clearSession } from '../api/client'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+
+import { authApi } from '../api/client'
+
+
 
 const AuthContext = createContext(null)
 
-function loadStoredUser() {
-  try {
-    const raw = localStorage.getItem('joblune_user')
-    return raw ? JSON.parse(raw) : null
-  } catch {
-    return null
-  }
+
+
+function readStoredUser() {
+
+try {
+
+const raw = localStorage.getItem('user')
+
+return raw ? JSON.parse(raw) : null
+
+} catch {
+
+return null
+
 }
+
+}
+
+
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(loadStoredUser)
-  const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const syncCurrentUser = async () => {
-      const token = localStorage.getItem('joblune_access_token')
-      if (!token) {
-        setUser(null)
-        setLoading(false)
-        return
-      }
+const [user, setUser] = useState(null)
 
-      try {
-        const data = await usersApi.me()
-        setUser(data)
-        localStorage.setItem('joblune_user', JSON.stringify(data))
-      } catch (error) {
-        setUser(null)
-      } finally {
-        setLoading(false)
-      }
-    }
+const [token, setToken] = useState('')
 
-    syncCurrentUser()
-  }, [])
+const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const handleAuthCleared = () => {
-      setUser(null)
-    }
 
-    window.addEventListener(AUTH_SESSION_CLEARED_EVENT, handleAuthCleared)
-    return () => window.removeEventListener(AUTH_SESSION_CLEARED_EVENT, handleAuthCleared)
-  }, [])
 
-  const persistSession = useCallback((authResponse) => {
-    localStorage.setItem('joblune_access_token', authResponse.accessToken)
-    localStorage.setItem('joblune_refresh_token', authResponse.refreshToken)
-    localStorage.setItem('joblune_user', JSON.stringify(authResponse.user))
-    setUser(authResponse.user)
-  }, [])
+useEffect(() => {
 
-  const login = useCallback(
-    async (email, password) => {
-      const res = await authApi.login({ email, password })
-      persistSession(res)
-      return res.user
-    },
-    [persistSession]
-  )
+const storedToken = localStorage.getItem('token') || ''
 
-  const register = useCallback(
-    async (payload) => {
-      const res = await authApi.register(payload)
-      persistSession(res)
-      return res.user
-    },
-    [persistSession]
-  )
+const storedUser = readStoredUser()
 
-  const refreshUser = useCallback(async () => {
-    const data = await usersApi.me()
-    setUser(data)
-    localStorage.setItem('joblune_user', JSON.stringify(data))
-    return data
-  }, [])
 
-  const logout = useCallback(() => {
-    clearSession()
-    setUser(null)
-  }, [])
 
-  return (
-    <AuthContext.Provider
-      value={{ user, login, register, logout, refreshUser, isAuthenticated: !!user, loading }}
-    >
-      {children}
-    </AuthContext.Provider>
-  )
+setToken(storedToken)
+
+setUser(storedUser)
+
+setLoading(false)
+
+}, [])
+
+
+
+async function login(email, password) {
+
+const normalizedEmail = email.trim().toLowerCase()
+
+const res = await authApi.login({ email: normalizedEmail, password })
+
+
+
+const nextToken = res.token || res.accessToken || ''
+
+const nextUser =
+
+res.user || {
+
+id: res.id,
+
+email: res.email,
+
+fullName: res.fullName,
+
+role: res.role
+
 }
+
+
+
+localStorage.setItem('token', nextToken)
+
+localStorage.setItem('user', JSON.stringify(nextUser))
+
+
+
+setToken(nextToken)
+
+setUser(nextUser)
+
+
+
+return nextUser
+
+}
+
+
+
+async function signup(payload) {
+
+const request = {
+
+username: payload.username,
+
+email: payload.email.trim().toLowerCase(),
+
+password: payload.password,
+
+fullName: payload.fullName,
+
+role: payload.role
+
+}
+
+
+
+const res = await authApi.signup(request)
+
+
+
+const nextToken = res.token || res.accessToken || ''
+
+const nextUser =
+
+res.user || {
+
+id: res.id,
+
+email: res.email,
+
+fullName: res.fullName,
+
+role: res.role
+
+}
+
+
+
+localStorage.setItem('token', nextToken)
+
+localStorage.setItem('user', JSON.stringify(nextUser))
+
+
+
+setToken(nextToken)
+
+setUser(nextUser)
+
+
+
+return nextUser
+
+}
+
+
+
+function logout() {
+
+localStorage.removeItem('token')
+
+localStorage.removeItem('user')
+
+setToken('')
+
+setUser(null)
+
+}
+
+
+
+const value = useMemo(
+
+() => ({
+
+user,
+
+token,
+
+isAuthenticated: Boolean(token),
+
+loading,
+
+login,
+
+signup,
+
+logout
+
+}),
+
+[user, token, loading]
+
+)
+
+
+
+return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+
+}
+
+
 
 export function useAuth() {
-  const ctx = useContext(AuthContext)
-  if (!ctx) throw new Error('useAuth must be used within AuthProvider')
-  return ctx
+
+const ctx = useContext(AuthContext)
+
+if (!ctx) {
+
+throw new Error('useAuth must be used within AuthProvider')
+
 }
+
+return ctx
+
+} 
+
