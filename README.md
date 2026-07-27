@@ -605,6 +605,7 @@ joblune/
 ├── README.md
 └── .github/
     └── workflows/
+      └── ci-cd.yml
 ```
 
 ---
@@ -944,15 +945,8 @@ Passionate about
 - Full-Stack Development
 - Cloud-native Architecture
 
-GitHub
-
-```
-https://github.com/ashhuxt/joblune.git
-```
-Live Demo 
-```
-https://joblune.vercel.app
-```
+* **GitHub:** [ashhuxt/joblune](https://github.com/ashhuxt/joblune)
+* **Live Demo:** [joblune.vercel.app](https://joblune.vercel.app)
 ---
 
 <div align="center">
